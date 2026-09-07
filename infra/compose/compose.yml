@@ -1,0 +1,135 @@
+version: '3.8'
+
+services:
+  # PostgreSQL - Control Plane
+  postgres:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: proxyadmin
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
+      POSTGRES_DB: proxyplatform
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - proxy-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U proxyadmin"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis - Data Plane cache & pub/sub
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - proxy-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # RabbitMQ - Queue (optional, for scaling)
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: proxyuser
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-changeme}
+    networks:
+      - proxy-network
+    profiles:
+      - full
+
+  # Control Plane API
+  control-plane:
+    build:
+      context: ./control-plane
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://proxyadmin:${DB_PASSWORD:-changeme}@postgres:5432/proxyplatform
+      REDIS_URL: redis://redis:6379
+      RABBITMQ_URL: amqp://proxyuser:${RABBITMQ_PASSWORD:-changeme}@rabbitmq:5672
+      SECRET_KEY: ${SECRET_KEY:-change-this-in-production-min-32-chars}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - proxy-network
+    restart: unless-stopped
+
+  # Data Plane API
+  data-plane:
+    build:
+      context: ./data-plane
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    environment:
+      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgresql://proxyadmin:${DB_PASSWORD:-changeme}@postgres:5432/proxyplatform
+      CHECK_TIMEOUT: 10
+      RECHECK_INTERVAL: 300
+      MIN_SCORE: 50
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - proxy-network
+    restart: unless-stopped
+
+  # Background Worker
+  worker:
+    build:
+      context: ./data-plane
+      dockerfile: Dockerfile
+    command: python -m app.worker.worker
+    environment:
+      REDIS_URL: redis://redis:6379
+      CHECK_TIMEOUT: 10
+      RECHECK_INTERVAL: 300
+      WORKER_CONCURRENCY: 50
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - proxy-network
+    restart: unless-stopped
+
+  # Frontend (Optional)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+      NEXT_PUBLIC_DATA_PLANE_URL: http://localhost:8001
+    depends_on:
+      - control-plane
+      - data-plane
+    networks:
+      - proxy-network
+    profiles:
+      - full
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  proxy-network:
+    driver: bridge

@@ -1,0 +1,122 @@
+services:
+  # PostgreSQL - Control Plane
+  postgres:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: proxyadmin
+      POSTGRES_PASSWORD: changeme
+      POSTGRES_DB: proxyplatform
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - proxy-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U proxyadmin"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis - Data Plane cache & pub/sub
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    networks:
+      - proxy-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # Control Plane API
+  control-plane:
+    build:
+      context: ./control-plane
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql://proxyadmin:changeme@postgres:5432/proxyplatform
+      REDIS_URL: redis://redis:6379
+      SECRET_KEY: change-this-to-a-secure-random-string-min-32-chars
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - proxy-network
+    restart: unless-stopped
+
+  # Data Plane API
+  data-plane:
+    build:
+      context: ./data-plane
+      dockerfile: Dockerfile
+    environment:
+      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgresql://proxyadmin:changeme@postgres:5432/proxyplatform
+      CHECK_TIMEOUT: "10"
+      RECHECK_INTERVAL: "300"
+      MIN_SCORE: "50"
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - proxy-network
+    restart: unless-stopped
+
+  # Background Worker
+  worker:
+    build:
+      context: ./data-plane
+      dockerfile: Dockerfile
+    command: python -m app.worker.worker
+    environment:
+      REDIS_URL: redis://redis:6379
+      CHECK_TIMEOUT: "10"
+      RECHECK_INTERVAL: "300"
+      WORKER_CONCURRENCY: "50"
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - proxy-network
+    restart: unless-stopped
+
+  # Frontend Dashboard
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      NEXT_PUBLIC_API_URL: http://son.lab
+      NEXT_PUBLIC_DATA_PLANE_URL: http://son.lab/api/v1
+    networks:
+      - proxy-network
+    restart: unless-stopped
+
+  # NGINX Reverse Proxy
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx.Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - control-plane
+      - data-plane
+      - frontend
+    networks:
+      - proxy-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  proxy-network:
+    driver: bridge
