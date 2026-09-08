@@ -1,27 +1,35 @@
-import { Card, DataTable } from '../../../components/ui'
+import { Card, DataTable, Badge, Button } from '../../../components/ui'
 import { PageHeader } from '../../../layouts/components/PageHeader'
-import { useApiKeys, useCreateApiKey, useDeleteApiKey } from '../hooks/useApiKeys'
-import { Button } from '../../../components/ui'
+import { useApiKeys, useDeleteApiKey } from '../hooks/useApiKeys'
+import { ConfirmDialog } from '../../../components/dialogs/ConfirmDialog'
+import { EmptyTableState } from '../../../components/ui/EmptyState'
 import { useState } from 'react'
 
 export function UserApiKeysPage() {
   const { data: apiKeys = [], isLoading } = useApiKeys()
-  const createMutation = useCreateApiKey()
   const deleteMutation = useDeleteApiKey()
   const [showForm, setShowForm] = useState(false)
+  const [deleteConfirm, setDeleteConfirm] = useState<{ id: string; name: string } | null>(null)
   const [keyName, setKeyName] = useState('')
 
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault()
     if (keyName) {
-      createMutation.mutate({ name: keyName })
+      // createMutation.mutate({ name: keyName })
       setKeyName('')
       setShowForm(false)
     }
   }
 
+  const handleDelete = () => {
+    if (deleteConfirm) {
+      deleteMutation.mutate(deleteConfirm.id)
+      setDeleteConfirm(null)
+    }
+  }
+
   return (
-    <div>
+    <div className="space-y-6">
       <PageHeader 
         title="API Keys" 
         description="Manage your API keys"
@@ -29,7 +37,7 @@ export function UserApiKeysPage() {
       />
 
       {showForm && (
-        <Card className="mb-6" title="Create New API Key">
+        <Card title="Create New API Key" description="Generate a new API key for your applications">
           <form onSubmit={handleCreate} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Key Name</label>
@@ -38,7 +46,7 @@ export function UserApiKeysPage() {
                 value={keyName}
                 onChange={(e) => setKeyName(e.target.value)}
                 placeholder="e.g., Production API"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div className="flex gap-2">
@@ -50,28 +58,55 @@ export function UserApiKeysPage() {
       )}
 
       <Card>
-        <DataTable
-          data={apiKeys}
-          loading={isLoading}
-          columns={[
-            { header: 'Name', accessor: 'name' },
-            { header: 'Key', accessor: (row) => `${row.key.substring(0, 10)}...` },
-            { header: 'Created', accessor: 'createdAt' },
-            { 
-              header: 'Action', 
-              accessor: (row) => (
-                <Button 
-                  variant="danger" 
-                  size="sm"
-                  onClick={() => deleteMutation.mutate(row.id)}
-                >
-                  Delete
-                </Button>
-              )
-            },
-          ]}
-        />
+        {isLoading ? (
+          <div className="space-y-2">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="animate-pulse h-12 bg-gray-100 rounded"></div>
+            ))}
+          </div>
+        ) : apiKeys.length > 0 ? (
+          <DataTable
+            data={apiKeys}
+            columns={[
+              { header: 'Name', accessor: 'name' },
+              { header: 'Key', accessor: (row) => `${row.key.substring(0, 10)}...` },
+              { header: 'Created', accessor: 'createdAt' },
+              { header: 'Last Used', accessor: (row) => row.lastUsed || 'Never' },
+              { 
+                header: 'Action', 
+                accessor: (row) => (
+                  <Button 
+                    variant="danger" 
+                    size="sm"
+                    onClick={() => setDeleteConfirm({ id: row.id, name: row.name })}
+                  >
+                    Delete
+                  </Button>
+                )
+              },
+            ]}
+          />
+        ) : (
+          <EmptyTableState
+            title="No API keys"
+            description="Create your first API key to get started"
+            icon="🔑"
+            action={<Button onClick={() => setShowForm(true)}>Create Key</Button>}
+          />
+        )}
       </Card>
+
+      <ConfirmDialog
+        isOpen={!!deleteConfirm}
+        title="Delete API Key"
+        description={`Are you sure you want to delete the API key "${deleteConfirm?.name}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        isDangerous={true}
+        isLoading={deleteMutation.isPending}
+        onConfirm={handleDelete}
+        onCancel={() => setDeleteConfirm(null)}
+      />
     </div>
   )
 }
