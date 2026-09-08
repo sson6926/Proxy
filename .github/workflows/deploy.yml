@@ -1,0 +1,46 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.8.0
+      with:
+        ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+      if: secrets.DEPLOY_SSH_KEY != ''
+
+    - name: Deploy to server
+      env:
+        DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+        DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+        DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+      run: |
+        if [ -z "$DEPLOY_HOST" ]; then
+          echo "Deployment secrets not configured"
+          exit 0
+        fi
+        ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST << 'EOF'
+          cd ${{ secrets.DEPLOY_PATH }}
+          git pull origin main
+          docker-compose pull
+          docker-compose up -d --build
+          docker system prune -f
+        EOF
+      if: secrets.DEPLOY_HOST != ''
+      continue-on-error: true
+
+    - name: Notify deployment
+      run: echo "Deployment completed"
