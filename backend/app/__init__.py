@@ -1,3 +1,0 @@
-"""
-Control Plane Application Package
-"""
