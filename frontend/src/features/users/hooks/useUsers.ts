@@ -1,10 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { usersApi } from '../api/users.api'
 import { CreateUserRequest, User } from '../types/user.types'
-<invoke name="write">
-<parameter name="content">import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { usersApi } from '../api/users.api'
-import { CreateUserRequest, User } from '../types/user.types'
 
 export function useUsers() {
   return useQuery({
@@ -36,7 +32,8 @@ export function useUpdateUser() {
   const queryClient = useQueryClient()
   
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<User> }) => usersApi.updateUser(id, data),
+    mutationFn: ({ id, data }: { id: string; data: Partial<User> }) => 
+      usersApi.updateUser(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] })
     },
