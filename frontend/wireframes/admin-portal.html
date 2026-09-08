@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proxy Platform - Admin Portal Wireframes</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8f9fa; }
+    .screen { background: white; margin: 40px auto; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .label { text-align: center; padding: 20px; font-weight: 600; color: #555; background: #f0f0f0; }
+    svg { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- Admin Overview -->
+<div class="screen">
+  <div class="label">Admin Overview</div>
+  <svg width="1200" height="800" viewBox="0 0 1200 800">
+    <!-- Sidebar -->
+    <rect x="0" y="0" width="240" height="800" fill="#ffffff" stroke="#e1e5e9"/>
+    <text x="24" y="48" font-size="20" font-weight="600" fill="#000">Admin Panel</text>
+    
+    <!-- Nav Items -->
+    <rect x="16" y="80" width="208" height="40" fill="#e0f2fe" rx="8"/>
+    <text x="40" y="104" font-size="14" fill="#0369a1">📊 Overview</text>
+    
+    <text x="40" y="152" font-size="14" fill="#4b5563">📦 Proxy Inventory</text>
+    <text x="40" y="192" font-size="14" fill="#4b5563">❤️ Proxy Health</text>
+    <text x="40" y="232" font-size="14" fill="#4b5563">⚙️ Workers</text>
+    <text x="40" y="272" font-size="14" fill="#4b5563">📡 Sources</text>
+    <text x="40" y="312" font-size="14" fill="#4b5563">👥 Users</text>
+    <text x="40" y="352" font-size="14" fill="#4b5563">🔑 API Keys</text>
+    <text x="40" y="392" font-size="14" fill="#4b5563">📈 Usage</text>
+    <text x="40" y="432" font-size="14" fill="#4b5563">📋 Audit Logs</text>
+    <text x="40" y="472" font-size="14" fill="#4b5563">⚡ System</text>
+    
+    <!-- Header -->
+    <rect x="240" y="0" width="960" height="64" fill="#ffffff" stroke="#e1e5e9"/>
+    <text x="280" y="40" font-size="18" font-weight="600" fill="#000">Overview</text>
+    <text x="1080" y="40" font-size="14" fill="#6b7280">admin@example.com</text>
+    
+    <!-- Stats Cards -->
+    <g transform="translate(280, 96)">
+      <rect width="200" height="120" fill="#ffffff" stroke="#e1e5e9" rx="8"/>
+      <text x="24" y="32" font-size="12" fill="#6b7280">Total Users</text>
+      <text x="24" y="64" font-size="32" font-weight="600" fill="#000">1,234</text>
+      <rect x="140" y="16" width="56" height="24" fill="#d1fae5" rx="12"/>
+      <text x="155" y="32" font-size="12" fill="#059669">+12%</text>
+    </g>
+    
+    <g transform="translate(504, 96)">
+      <rect width="200" height="120" fill="#ffffff" stroke="#e1e5e9" rx="8"/>
+      <text x="24" y="32" font-size="12" fill="#6b7280">Active Proxies</text>
+      <text x="24" y="64" font-size="32" font-weight="600" fill="#000">8,567</text>
+      <rect x="140" y="16" width="56" height="24" fill="#d1fae5" rx="12"/>
+      <text x="155" y="32" font-size="12" fill="#059669">+5%</text>
+    </g>
+    
+    <g transform="translate(728, 96)">
+      <rect width="200" height="120" fill="#ffffff" stroke="#e1e5e9" rx="8"/>
+      <text x="24" y="32" font-size="12" fill="#6b7280">Daily Requests</text>
+      <text x="24" y="64" font-size="32" font-weight="600" fill="#000">245K</text>
+      <rect x="140" y="16" width="56" height="24" fill="#d1fae5" rx="12"/>
+      <text x="155" y="32" font-size="12" fill="#059669">+8%</text>
+    </g>
+    
+    <g transform="translate(952, 96)">
+      <rect width="200" height="120" fill="#ffffff" stroke="#e1e5e9" rx="8"/>
+      <text x="24" y="32" font-size="12" fill="#6b7280">System Health</text>
+      <text x="24" y="64" font-size="32" font-weight="600" fill="#000">99.9%</text>
+      <rect x="140" y="16" width="56" height="24" fill="#d1fae5" rx="12"/>
+      <text x="155" y="32" font-size="12" fill="#059669">+0.1%</text>
+    </g>
+    
+    <!-- System Status -->
+    <g transform="translate(280, 248)">
+      <rect width="416" height="320" fill="#ffffff" stroke="#e1e5e9" rx="8"/>
+      <text x="24" y="32" font-size="16" font-weight="600" fill="#000">System Status</text>
+      
+      <g transform="translate(24, 56)">
+        <rect width="368" height="56" fill="#f9fafb" rx="8"/>
+        <text x="16" y="32" font-size="14" fill="#000">Database</text>
+        <rect x="280" y="16" width="72" height="24" fill="#d1fae5" rx="12"/>
+        <text x="295" y="32" font-size="12" fill="#059669">Healthy</text>
+      </g>
+      
+      <g transform="translate(24, 120)">
+        <rect width="368" height="56" fill="#f9fafb" rx="8"/>
+        <text x="16" y="32" font-size="14" fill="#000">Redis Cache</text>
+        <rect x="280" y="16" width="72" height="24" fill="#d1fae5" rx="12"/>
+        <text x="295" y="32" font-size="12" fill="#059669">Healthy</text>
+      </g>
+      
+      <g transform="translate(24, 184)">
+        <rect width="368" height="56" fill="#f9fafb" rx="8"/>
+        <text x="16" y="32" font-size="14" fill="#000">Workers</text>
+        <rect x="280" y="16" width="72" height="24" fill="#d1fae5" rx="12"/>
+        <text x="295" y="32" font-size="12" fill="#059669">Running</text>
+      </g>
+    </g>
+    
+    <!-- Active Workers -->
+    <g transform="translate(720, 248)">
+      <rect width="432" height="320" fill="#ffffff" stroke="#e1e5e9" rx="8"/>
+      <text x="24" y="32" font-size="16" font-weight="600" fill="#000">Active Workers</text>
+      
+      <!-- Worker Card -->
+      <g transform="translate(24, 56)">
+        <rect width="384" height="80" fill="#f9fafb" rx="8"/>
+        <text x="16" y="28" font-size="14" font-weight="600" fill="#000">worker-001</text>
+        <rect x="280" y="8" width="88" height="24" fill="#d1fae5" rx="12"/>
+        <text x="300" y="24" font-size="12" fill="#059669">Active</text>
+        <text x="16" y="52" font-size="12" fill="#6b7280">Proxies checked: 1,234</text>
+        <text x="16" y="68" font-size="12" fill="#6b7280">Last heartbeat: 30s ago</text>
+      </g>
+      
+      <g transform="translate(24, 144)">
+        <rect width="384" height="80" fill="#f9fafb" rx="8"/>
+        <text x="16" y="28" font-size="14" font-weight="600" fill="#000">worker-002</text>
+        <rect x="280" y="8" width="88" height="24" fill="#d1fae5" rx="12"/>
+        <text x="300" y="24" font-size="12" fill="#059669">Active</text>
+        <text x="16" y="52" font-size="12" fill="#6b7280">Proxies checked: 987</text>
+        <text x="16" y="68" font-size="12" fill="#6b7280">Last heartbeat: 45s ago</text>
+      </g>
+    </g>
+  </svg>
+</div>
+
+<!-- Proxy Inventory -->
+<div class="screen">
+  <div class="label">Proxy Inventory</div>
+  <svg width="1200" height="800" viewBox="0 0 1200 800">
+    <!-- Sidebar -->
+    <rect x="0" y="0" width="240" height="800" fill="#ffffff" stroke="#e1e5e9"/>
+    <text x="24" y="48" font-size="20" font-weight="600" fill="#000">Admin Panel</text>
+    <text x="40" y="104" font-size="14" fill="#4b5563">📊 Overview</text>
+    <rect x="16" y="120" width="208" height="40" fill="#e0f2fe" rx="8"/>
+    <text x="40" y="144" font-size="14" fill="#0369a1">📦 Proxy Inventory</text>
+    <text x="40" y="184" font-size="14" fill="#4b5563">❤️ Proxy Health</text>
+    <text x="40" y="224" font-size="14" fill="#4b5563">⚙️ Workers</text>
+    <text x="40" y="264" font-size="14" fill="#4b5563">📡 Sources</text>
+    <text x="40" y="304" font-size="14" fill="#4b5563">👥 Users</text>
+    <text x="40" y="344" font-size="14" fill="#4b5563">🔑 API Keys</text>
+    <text x="40" y="384" font-size="14" fill="#4b5563">📈 Usage</text>
+    <text x="40" y="424" font-size="14" fill="#4b5563">📋 Audit Logs</text>
+    <text x="40" y="464" font-size="14" fill="#4b5563">⚡ System</text>
+    
+    <!-- Header -->
+    <rect x="240" y="0" width="960" height="64" fill="#ffffff" stroke="#e1e5e9"/>
+    <text x="280" y="40" font-size="18" font-weight="600" fill="#000">Proxy Inventory</text>
+    
+    <!-- Filters -->
+    <g transform="translate(280, 96)">
+      <rect width="120" height="40" fill="#ffffff" stroke="#d1d5db" rx="6"/>
+      <text x="16" y="26" font-size="14" fill="#000">All Protocols</text>
+      
+      <rect x="136" width="120" height="40" fill="#ffffff" stroke="#d1d5db" rx="6"/>
+      <text x="152" y="26" font-size="14" fill="#000">All Countries</text>
+      
+      <rect x="272" width="120" height="40" fill="#ffffff" stroke="#d1d5db" rx="6"/>
+      <text x="288" y="26" font-size="14" fill="#000">All Status</text>
+      
+      <rect x="920" width="120" height="40" fill="#0369a1" rx="6"/>
+      <text x="936" y="26" font-size="14" font-weight="600" fill="#ffffff">+ Add Proxy</text>
+    </g>
+    
+    <!-- Table -->
+    <g transform="translate(280, 160)">
+      <rect width="872" height="600" fill="#ffffff" stroke="#e1e5e9" rx="8"/>
+      
+      <!-- Table Header -->
+      <rect x="0" y="0" width="872" height="56" fill="#f9fafb" rx="8"/>
+      <text x="24" y="36" font-size="12" font-weight="600" fill="#374151">IP ADDRESS</text>
+      <text x="160" y="36" font-size="12" font-weight="600" fill="#374151">PORT</text>
+      <text x="240" y="36" font-size="12" font-weight="600" fill="#374151">PROTOCOL</text>
+      <text x="350" y="36" font-size="12" font-weight="600" fill="#374151">COUNTRY</text>
+      <text x="480" y="36" font-size="12" font-weight="600" fill="#374151">ANONYMITY</text>
+      <text x="600" y="36" font-size="12" font-weight="600" fill="#374151">STATUS</text>
+      <text x="720" y="36" font-size="12" font-weight="600" fill="#374151">ACTIONS</text>
+      
+      <!-- Rows -->
+      <line x1="0" y1="56" x2="872" y2="56" stroke="#e1e5e9"/>
+      <text x="24" y="92" font-size="14" fill="#000">192.168.1.1</text>
+      <text x="160" y="92" font-size="14" fill="#000">8080</text>
+      <text x="240" y="92" font-size="14" fill="#000">HTTP</text>
+      <text x="350" y="92" font-size="14" fill="#000">US</text>
+      <text x="480" y="92" font-size="14" fill="#000">Elite</text>
+      <rect x="600" y="76" width="80" height="24" fill="#d1fae5" rx="12"/>
+      <text x="616" y="92" font-size="12" fill="#059669">Active</text>
+      <text x="720" y="92" font-size="14" fill="#0369a1">Edit • Delete</text>
+      
+      <line x1="0" y1="112" x2="872" y2="112" stroke="#e1e5e9"/>
+      <text x="24" y="148" font-size="14" fill="#000">10.0.0.1</text>
+      <text x="160" y="148" font-size="14" fill="#000">3128</text>
+      <text x="240" y="148" font-size="14" fill="#000">HTTPS</text>
+      <text x="350" y="148" font-size="14" fill="#000">UK</text>
+      <text x="480" y="148" font-size="14" fill="#000">Anonymous</text>
+      <rect x="600" y="132" width="80" height="24" fill="#d1fae5" rx="12"/>
+      <text x="616" y="148" font-size="12" fill="#059669">Active</text>
+      <text x="720" y="148" font-size="14" fill="#0369a1">Edit • Delete</text>
+    </g>
+  </svg>
+</div>
+
+<!-- Users Management -->
+<div class="screen">
+  <div class="label">Users</div>
+  <svg width="1200" height="800" viewBox="0 0 1200 800">
+    <!-- Sidebar -->
+    <rect x="0" y="0" width="240" height="800" fill="#ffffff" stroke="#e1e5e9"/>
+    <text x="24" y="48" font-size="20" font-weight="600" fill="#000">Admin Panel</text>
+    <text x="40" y="104" font-size="14" fill="#4b5563">📊 Overview</text>
+    <text x="40" y="144" font-size="14" fill="#4b5563">📦 Proxy Inventory</text>
+    <text x="40" y="184" font-size="14" fill="#4b5563">❤️ Proxy Health</text>
+    <text x="40" y="224" font-size="14" fill="#4b5563">⚙️ Workers</text>
+    <text x="40" y="264" font-size="14" fill="#4b5563">📡 Sources</text>
+    <rect x="16" y="280" width="208" height="40" fill="#e0f2fe" rx="8"/>
+    <text x="40" y="304" font-size="14" fill="#0369a1">👥 Users</text>
+    <text x="40" y="344" font-size="14" fill="#4b5563">🔑 API Keys</text>
+    <text x="40" y="384" font-size="14" fill="#4b5563">📈 Usage</text>
+    <text x="40" y="424" font-size="14" fill="#4b5563">📋 Audit Logs</text>
+    <text x="40" y="464" font-size="14" fill="#4b5563">⚡ System</text>
+    
+    <!-- Header -->
+    <rect x="240" y="0" width="960" height="64" fill="#ffffff" stroke="#e1e5e9"/>
+    <text x="280" y="40" font-size="18" font-weight="600" fill="#000">Users</text>
+    <rect x="960" y="16" width="160" height="32" fill="#0369a1" rx="6"/>
+    <text x="1040" y="38" font-size="14" font-weight="600" fill="#ffffff" text-anchor="middle">+ Add User</text>
+    
+    <!-- Search & Filter -->
+    <g transform="translate(280, 96)">
+      <rect width="320" height="40" fill="#ffffff" stroke="#d1d5db" rx="6"/>
+      <text x="16" y="26" font-size="14" fill="#9ca3af">Search users...</text>
+      
+      <rect x="832" width="120" height="40" fill="#ffffff" stroke="#d1d5db" rx="6"/>
+      <text x="848" y="26" font-size="14" fill="#000">All Plans</text>
+    </g>
+    
+    <!-- Users Table -->
+    <g transform="translate(280, 160)">
+      <rect width="872" height="600" fill="#ffffff" stroke="#e1e5e9" rx="8"/>
+      
+      <!-- Table Header -->
+      <rect x="0" y="0" width="872" height="56" fill="#f9fafb" rx="8"/>
+      <text x="24" y="36" font-size="12" font-weight="600" fill="#374151">USER</text>
+      <text x="250" y="36" font-size="12" font-weight="600" fill="#374151">EMAIL</text>
+      <text x="450" y="36" font-size="12" font-weight="600" fill="#374151">PLAN</text>
+      <text x="560" y="36" font-size="12" font-weight="600" fill="#374151">STATUS</text>
+      <text x="680" y="36" font-size="12" font-weight="600" fill="#374151">JOINED</text>
+      <text x="780" y="36" font-size="12" font-weight="600" fill="#374151">ACTIONS</text>
+      
+      <!-- User Row -->
+      <line x1="0" y1="56" x2="872" y2="56" stroke="#e1e5e9"/>
+      <circle cx="48" cy="84" r="20" fill="#e5e7eb"/>
+      <text x="24" y="128" font-size="14" font-weight="600" fill="#000">John Doe</text>
+      <text x="250" y="92" font-size="14" fill="#000">john@example.com</text>
+      <text x="450" y="92" font-size="14" fill="#000">Pro</text>
+      <rect x="560" y="76" width="80" height="24" fill="#d1fae5" rx="12"/>
+      <text x="576" y="92" font-size="12" fill="#059669">Active</text>
+      <text x="680" y="92" font-size="14" fill="#000">Jan 15, 2024</text>
+      <text x="780" y="92" font-size="14" fill="#0369a1">Edit • Delete</text>
+    </g>
+  </svg>
+</div>
+
+</body>
+</html>
