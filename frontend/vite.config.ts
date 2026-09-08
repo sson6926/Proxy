@@ -1,20 +1,20 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import path from 'path'
 
 export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': '/src',
+      '@': path.resolve(__dirname, './src'),
     },
   },
   server: {
-    host: true,
     port: 5173,
-    allowedHosts: ['frontend', 'localhost', 'son.lab', '127.0.0.1'],
+    host: true,
     hmr: {
-      host: 'localhost',
       protocol: 'ws',
+      host: 'localhost',
     },
   },
 })
