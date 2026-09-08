@@ -1,6 +1,9 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { USER_ROUTES, ADMIN_ROUTES } from './routes'
 
+// Auth
+import { LoginPage, RegisterPage, ProtectedRoute } from '../features/auth'
+
 // Layouts
 import { UserLayout } from '../layouts/UserLayout'
 import { AdminLayout } from '../layouts/AdminLayout'
@@ -28,11 +31,21 @@ import { AuditLogsPage } from '../features/audit-logs/pages/AuditLogsPage'
 export function AppRouter() {
   return (
     <Routes>
+      {/* Auth Routes */}
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      
       {/* Redirect root to dashboard */}
       <Route path="/" element={<Navigate to={USER_ROUTES.DASHBOARD} replace />} />
       
-      {/* User Portal Routes */}
-      <Route element={<UserLayout />}>
+      {/* User Portal Routes - Protected */}
+      <Route
+        element={
+          <ProtectedRoute>
+            <UserLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route path={USER_ROUTES.DASHBOARD} element={<DashboardPage />} />
         <Route path={USER_ROUTES.GET_PROXY} element={<GetProxyPage />} />
         <Route path={USER_ROUTES.PROXY_EXPLORER} element={<ProxyExplorerPage />} />
@@ -42,8 +55,15 @@ export function AppRouter() {
         <Route path={USER_ROUTES.ACCOUNT} element={<AccountPage />} />
       </Route>
       
-      {/* Admin Portal Routes */}
-      <Route path="/admin" element={<AdminLayout />}>
+      {/* Admin Portal Routes - Protected */}
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<AdminOverviewPage />} />
         <Route path={ADMIN_ROUTES.PROXY_INVENTORY.replace('/admin/', '')} element={<ProxyInventoryPage />} />
         <Route path={ADMIN_ROUTES.PROXY_HEALTH.replace('/admin/', '')} element={<ProxyHealthPage />} />
