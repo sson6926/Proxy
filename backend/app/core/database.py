@@ -1,30 +1,26 @@
-"""
-Database Configuration
-"""
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
+from sqlalchemy.orm import declarative_base
 from .config import settings
 
-# Create engine
-engine = create_engine(
+# Create async engine
+engine = create_async_engine(
     settings.DATABASE_URL,
+    echo=settings.DEBUG,
+    future=True,
     pool_pre_ping=True,
-    pool_size=10,
-    max_overflow=20
 )
 
-# Create session factory
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# Create async session factory
+AsyncSessionLocal = async_sessionmaker(
+    engine,
+    class_=AsyncSession,
+    expire_on_commit=False,
+)
 
-# Create base class for models
+# Base class for models
 Base = declarative_base()
 
-
-# Dependency to get database session
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+async def get_db():
+    """Dependency for FastAPI to get database session"""
+    async with AsyncSessionLocal() as session:
+        yield session
