@@ -12,11 +12,6 @@ export default defineConfig({
   server: {
     port: 5173,
     host: '0.0.0.0',
-    hmr: {
-      protocol: 'ws',
-      host: '192.168.54.55',
-      port: 8080,
-      clientPort: 8080,
-    },
+    hmr: false,  // Disable HMR to stop infinite reload
   },
 })
